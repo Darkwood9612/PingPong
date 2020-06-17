@@ -16,14 +16,19 @@ public:
 
 	bool needCloseGame = false;
 
-	SDL_Surface* dividingStrip = nullptr;;
+	SDL_Surface* dividingStrip = nullptr;
 
-	SDL_Surface* playerPoints = nullptr;
-	SDL_Surface* botPoints = nullptr;;
+	void SetSpeed(int newSpeed) { this->speed = newSpeed > 0 ? this->speed : 10; };
 
-	void SetSpeed(int newSpeed) { this->speed = newSpeed; };
+	void AddPointToPlayer() { ++this->playerPoints; };
+	void AddPointToBot() { ++this->botPoints; };
 
+	int GetPlayerScore() { return this->playerPoints; };
+	int GetBotScore() { return this->botPoints; };
 private:
+	int playerPoints = 0;
+	int botPoints = 0;
+
 	const int SCREEN_HEIGHT;
 	int speed = 10;
 	Platform playerPlatform;

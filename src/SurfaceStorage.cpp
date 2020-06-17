@@ -20,6 +20,11 @@ SDL_Surface* SurfaceStorage::LoadBMP(const std::string name, const char* path)
     throw std::runtime_error("LoadBMP error: result == nullptr");
 }
 
+void SurfaceStorage::SetBMP(const std::string name, SDL_Surface* surface)
+{
+    this->storage[name] = surface;
+}
+
 SDL_Surface* SurfaceStorage::GetBMP(const std::string name)
 {
     auto findResult = std::find_if(this->storage.begin(), this->storage.end(), [&name](std::pair<const std::string, SDL_Surface*>& item) {

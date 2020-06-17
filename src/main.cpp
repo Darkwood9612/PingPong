@@ -35,13 +35,17 @@ int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage) {
 
 int main(int argc, char** args) {
     
-    ///while (!IsDebuggerPresent()) {
-    ///    Sleep(1);
-    ///}
+    //while (!IsDebuggerPresent()) {
+    //    Sleep(1);
+    //}
 
     try{
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             throw std::runtime_error("Fatal initialization error!");
+
+        if (TTF_Init() != 0)
+            throw std::runtime_error("Fatal initialization error!");
+        
         
         SurfaceStorage surfaceStorage;
         Controller controller = Controller();
@@ -56,7 +60,7 @@ int main(int argc, char** args) {
 
         while (true) {
             controller.UpdateModel(gameModel);
-            view.Draw(gameModel, windowModel);
+            view.Draw(gameModel, windowModel, surfaceStorage);
             
             if (gameModel.needCloseGame)
                 break;
