@@ -11,7 +11,7 @@ void Controller::UpdateModel(GameModel& model)
 
     switch (event.type){
         case SDL_QUIT:
-            model.needExitGame = true;
+            model.needCloseGame = true;
             break; 
         case SDL_KEYDOWN:
             KeyDown(event.key.keysym, model);

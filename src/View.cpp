@@ -6,17 +6,21 @@ View::View(void)
 {
 }
 
-void View::Draw(GameModel& model)
+void View::Draw(GameModel& gameModel, WindowModel& windowModel)
 {
-    SDL_FillRect(model.screen, NULL, SDL_MapRGB(model.screen->format, 0, 0, 0));
+    SDL_FillRect(windowModel.screen, NULL, SDL_MapRGB(windowModel.screen->format, 0, 0, 0));
 
-    SDL_Surface platformBackground = model.GetPlatformBackground();
+    SDL_Surface platformBackground = gameModel.GetPlatformBackground();
 
-    SDL_Rect playerRect = model.GetPlayerRect();
-    SDL_Rect botRect = model.GetBotRect();
+    SDL_Rect playerRect = gameModel.GetPlayerRect();
+    SDL_Rect botRect = gameModel.GetBotRect();
 
-    SDL_BlitSurface(&platformBackground, NULL, model.screen, &playerRect);
-    SDL_BlitSurface(&platformBackground, NULL, model.screen, &botRect);
+    auto infelicity = gameModel.dividingStrip ? gameModel.dividingStrip->w / 2 : 0;
+    SDL_Rect centerRect = { int(windowModel.SCREEN_WIDTH / 2 - infelicity), 0, 0, 0};
 
-    SDL_UpdateWindowSurface(model.window);
+    SDL_BlitSurface(gameModel.dividingStrip, NULL, windowModel.screen, &centerRect);
+    SDL_BlitSurface(&platformBackground, NULL, windowModel.screen, &playerRect);
+    SDL_BlitSurface(&platformBackground, NULL, windowModel.screen, &botRect);
+
+    SDL_UpdateWindowSurface(windowModel.window);
 }

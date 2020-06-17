@@ -6,6 +6,8 @@
 #include "GameModel.h"
 #include "Controller.h"
 #include "View.h"
+#include <SDL2/SDL_ttf.h>
+
 #undef main 
 
 int Init(const char* title, SDL_Window* window, SDL_Surface* scr, int SCREEN_WIDTH, int SCREEN_HEIGHT, uint32_t flags) {
@@ -32,10 +34,6 @@ int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage) {
 }
 
 int main(int argc, char** args) {
-
-    const int SCREEN_WIDTH = 640;
-    const int SCREEN_HEIGHT = 480;
-    uint32_t windowFlags = SDL_WINDOW_SHOWN;
     
     ///while (!IsDebuggerPresent()) {
     ///    Sleep(1);
@@ -49,22 +47,22 @@ int main(int argc, char** args) {
         Controller controller = Controller();
         View view = View();
 
-        GameModel model = GameModel(SCREEN_WIDTH, SCREEN_HEIGHT, surfaceStorage.LoadBMP("platform", "Platform.bmp", 10 , 80));
-        model.window = SDL_CreateWindow("PingPong", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
-        model.screen = SDL_GetWindowSurface(model.window);
-
-        if (!model.window)
+        WindowModel windowModel = WindowModel("PingPong");
+        if (!windowModel.window)
             throw std::runtime_error("window == nullptr");
+        
+        GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", "platform.bmp"));
+        gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", "dividingStrip.bmp");
 
         while (true) {
-            controller.UpdateModel(model);
-            view.Draw(model);
+            controller.UpdateModel(gameModel);
+            view.Draw(gameModel, windowModel);
             
-            if (model.needExitGame)
+            if (gameModel.needCloseGame)
                 break;
         }
 
-        return Quit(model.window, surfaceStorage);
+        return Quit(windowModel.window, surfaceStorage);
     }
     catch (const std::exception& e){
         MessageBox(NULL, e.what(), NULL, MB_OK);

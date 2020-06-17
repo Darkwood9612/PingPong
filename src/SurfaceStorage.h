@@ -6,18 +6,13 @@ struct SDL_Surface;
 class SurfaceStorage
 {
 public:
-	
-	struct SurfaceData {
-		SDL_Surface* surface = nullptr;
-		int width, height;
-	};
 
-	SurfaceStorage::SurfaceData LoadBMP(const std::string name, const char* path, int width, int height);
-	SurfaceStorage::SurfaceData GetBMP(const std::string name);
+	SDL_Surface* LoadBMP(const std::string name, const char* path);
+	SDL_Surface* GetBMP(const std::string name);
 	void FreeSurface(std::string name);
 	void FreeAllSurfaces();
 
 private:
-	using Storage = std::map<std::string, SurfaceData>;
+	using Storage = std::map<std::string, SDL_Surface*>;
 	Storage storage;
 };
