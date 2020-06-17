@@ -38,7 +38,10 @@ int main(int argc, char** args) {
     //while (!IsDebuggerPresent()) {
     //    Sleep(1);
     //}
-
+    const char* PLATFORM_BACKGROUND_PATH = "bmp/platform.bmp";
+    const char* SIVIDING_STRIP_BACKGROUND_PATH = "bmp/dividingStrip.bmp";
+    const char* WINDOW_TITLE = "PingPong";
+    
     try{
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             throw std::runtime_error("Fatal initialization error!");
@@ -51,12 +54,12 @@ int main(int argc, char** args) {
         Controller controller = Controller();
         View view = View();
 
-        WindowModel windowModel = WindowModel("PingPong");
+        WindowModel windowModel = WindowModel(WINDOW_TITLE);
         if (!windowModel.window)
             throw std::runtime_error("window == nullptr");
         
-        GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", "platform.bmp"));
-        gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", "dividingStrip.bmp");
+        GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", PLATFORM_BACKGROUND_PATH));
+        gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", SIVIDING_STRIP_BACKGROUND_PATH);
 
         while (true) {
             controller.UpdateModel(gameModel);

@@ -15,7 +15,7 @@ namespace {
 
     SDL_Surface* ScoreToSurface(const int FONT_SIZE, int number, const std::string& name, SurfaceStorage& surfaceStorage) {
 
-        static TTF_Font* myFont = TTF_OpenFont("fast99.ttf", FONT_SIZE);
+        static TTF_Font* myFont = TTF_OpenFont("font/fast99.ttf", FONT_SIZE);
         SDL_Color myTextColor = { 255, 255, 255 };
 
         std::string score = IntToString(number);
