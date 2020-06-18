@@ -33,6 +33,7 @@ find_package(SDL2-mixer REQUIRED)
 target_link_libraries(test_task PRIVATE SDL2::SDL2_mixer)
 
 add_custom_target(copy_fonts ALL
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/bmp $<TARGET_FILE_DIR:test_task>/bmp
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/image $<TARGET_FILE_DIR:test_task>/image
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/font $<TARGET_FILE_DIR:test_task>/font
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sound $<TARGET_FILE_DIR:test_task>/sound
 )

@@ -14,9 +14,9 @@
 #undef main 
 
 namespace {
-    constexpr char* PLATFORM_BACKGROUND_PATH = "bmp/platform.bmp";
-    constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "bmp/dividingStrip.bmp";
-    constexpr char* BALL_BACKGROUND_PATH = "bmp/ball.bmp";
+    constexpr char* PLATFORM_BACKGROUND_PATH = "image/platform.bmp";
+    constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "image/dividingStrip.bmp";
+    constexpr char* BALL_BACKGROUND_PATH = "image/ball.bmp";
     
     constexpr char* FONT_PATH = "font/fast99.ttf";
     constexpr int FONT_SIZE = 36;

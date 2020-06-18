@@ -30,9 +30,21 @@ void Ball::Respawn(SDL_Rect spawnPoint)
     angleOfFlight = 112.f;
 }
 
-void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback)
+void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const SDL_Surface& ballBackground, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback)
 {
     auto nextPoint = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+    
+    if (nextPoint.x <= playerRect.x + ballBackground.w &&
+        nextPoint.y <= playerRect.y &&
+        nextPoint.y >= playerRect.y + ballBackground.h) {
+
+        angleOfFlight = 180 - angleOfFlight;
+        angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
+
+        rect = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+        soundCallback();
+        return;
+    }
 
     if (nextPoint.x > 0 && nextPoint.x < SCREEN_WIDTH && nextPoint.y > 0 && nextPoint.y < SCREEN_HEIGHT) {
 

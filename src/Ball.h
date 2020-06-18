@@ -9,7 +9,7 @@ public:
 	Ball() {};
 
 	void Respawn(SDL_Rect spawnPoint);
-	void Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback);
+	void Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const SDL_Surface& ballBackground, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback);
 private:
 	float angleOfFlight = 112.f;
 };

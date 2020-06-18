@@ -71,7 +71,7 @@ void GameModel::BotPlatformMoveUp()
 
 void GameModel::MoveBall()
 {
-    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, []() {}, [&](bool isPlayerWin){
+    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlatformBackground(), GetPlayerRect(), GetBotRect(), []() {}, [&](bool isPlayerWin){
         isPlayerWin ? this->AddPointToPlayer() : this->AddPointToBot();
         //ball.Respawn(screenCenter);
     });
