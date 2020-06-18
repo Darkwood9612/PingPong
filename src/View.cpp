@@ -1,84 +1,48 @@
-#include "View.h"
-#include <sstream>
-#include <string> 
 #include <SDL2\SDL_ttf.h>
-#include "SurfaceStorage.h"
 
-View::View(void) {};
+#include "View.h"
+#include "SurfaceStorage.h" 
 
-namespace {
-    std::string IntToString(int n) {
-        std::stringstream sstream;
-        sstream << n;
-        return sstream.str();
-    }
+View::View() {};
 
-    SDL_Surface* ScoreToSurface(const int FONT_SIZE, int number, const std::string& name, SurfaceStorage& surfaceStorage) {
+void View::DrawScore(GameModel& gameModel, Window& window, SurfaceStorage& surfaceStorage)
+{
+    SDL_Surface* ScoreImage = gameModel.GetPlayerScoreSurface(window.windowPlayerScore, surfaceStorage);
+    window.windowPlayerScore = gameModel.GetPlayerScore();
 
-        static TTF_Font* myFont = TTF_OpenFont("font/fast99.ttf", FONT_SIZE);
-        SDL_Color myTextColor = { 255, 255, 255 };
+    SDL_Rect rect = window.GetPlayerScoreRect();
+    rect.x -= ScoreImage->w;
+    SDL_BlitSurface(ScoreImage, NULL, window.screen, &rect);
 
-        std::string score = IntToString(number);
-        auto scoreImage = TTF_RenderText_Solid(myFont, score.c_str(), myTextColor);
-        
-        if (!scoreImage) {
-            std::string err = TTF_GetError();
-            throw std::runtime_error("Error in function 'TTF_RenderText_Solid': " + err);
-        }
 
-        surfaceStorage.SetBMP(name, scoreImage);
-        return scoreImage;
-    }
+    ScoreImage = gameModel.GetBotScoreSurface(window.windowBotScore, surfaceStorage);
+    window.windowBotScore = gameModel.GetBotScore();
 
-    SDL_Surface* GetOldScore(const std::string& name, SurfaceStorage& surfaceStorage) {
-        return surfaceStorage.GetBMP(name);
-    }
+    rect = window.GetBotScoreRect();
+    SDL_BlitSurface(ScoreImage, NULL, window.screen, &rect);
 }
 
-void View::DrawScore(GameModel& gameModel, WindowModel& windowModel, SurfaceStorage& surfaceStorage)
+void View::Draw(GameModel& gameModel, Window& window, SurfaceStorage& surfaceStorage)
 {
-    static int oldPlayerScore = gameModel.GetPlayerScore() - 1;
-    static int oldBotScore = gameModel.GetBotScore() - 1;
-    static const int FONT_SIZE = 36;
+    window.SetDividingStripXOffset(gameModel.dividingStrip
+        ? gameModel.dividingStrip->w / 2 : 0);
 
-    SDL_Rect rect;
-
-    SDL_Surface* ScoreImage = gameModel.GetPlayerScore() != oldPlayerScore 
-        ? ScoreToSurface(FONT_SIZE, gameModel.GetPlayerScore(), "playerScore", surfaceStorage)
-        : GetOldScore("playerScore", surfaceStorage);
-    
-    oldPlayerScore = gameModel.GetPlayerScore();
-    rect.x = int(windowModel.SCREEN_WIDTH * 0.4 - FONT_SIZE);
-    rect.y = int(windowModel.SCREEN_HEIGHT * 0.06);
-    SDL_BlitSurface(ScoreImage, NULL, windowModel.screen, &rect);
-
-    ScoreImage = gameModel.GetBotScore() != oldBotScore 
-        ? ScoreToSurface(FONT_SIZE, gameModel.GetBotScore(), "botScore", surfaceStorage)
-        : GetOldScore("botScore", surfaceStorage);
-
-    oldBotScore = gameModel.GetBotScore();
-    rect.x = int(windowModel.SCREEN_WIDTH * 0.6);
-    rect.y = int(windowModel.SCREEN_HEIGHT * 0.06);
-    SDL_BlitSurface(ScoreImage, NULL, windowModel.screen, &rect);
-}
-
-void View::Draw(GameModel& gameModel, WindowModel& windowModel, SurfaceStorage& surfaceStorage)
-{
-    SDL_FillRect(windowModel.screen, NULL, SDL_MapRGB(windowModel.screen->format, 0, 0, 0));
+    SDL_FillRect(window.screen, NULL, SDL_MapRGB(window.screen->format, 0, 0, 0));
 
     SDL_Surface platformBackground = gameModel.GetPlatformBackground();
+    SDL_Surface ballBackground = gameModel.ball.GetBackGround();
 
     SDL_Rect playerRect = gameModel.GetPlayerRect();
     SDL_Rect botRect = gameModel.GetBotRect();
+    SDL_Rect dividingStripRect = window.GetDividingStripRect();
+    SDL_Rect ballRect = gameModel.ball.GetRect();
 
-    auto infelicity = gameModel.dividingStrip ? gameModel.dividingStrip->w / 2 : 0;
-    SDL_Rect centerRect = { int(windowModel.SCREEN_WIDTH / 2 - infelicity), 0, 0, 0};
+    SDL_BlitSurface(gameModel.dividingStrip, NULL, window.screen, &dividingStripRect);
+    SDL_BlitSurface(&platformBackground, NULL, window.screen, &playerRect);
+    SDL_BlitSurface(&platformBackground, NULL, window.screen, &botRect);
+    SDL_BlitSurface(&ballBackground, NULL, window.screen, &ballRect);
 
-    SDL_BlitSurface(gameModel.dividingStrip, NULL, windowModel.screen, &centerRect);
-    SDL_BlitSurface(&platformBackground, NULL, windowModel.screen, &playerRect);
-    SDL_BlitSurface(&platformBackground, NULL, windowModel.screen, &botRect);
+    DrawScore(gameModel, window, surfaceStorage);
 
-    DrawScore(gameModel, windowModel, surfaceStorage);
-
-    SDL_UpdateWindowSurface(windowModel.window);
+    SDL_UpdateWindowSurface(window.window);
 }

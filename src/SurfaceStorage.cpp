@@ -1,14 +1,16 @@
 #include "SurfaceStorage.h"
-#include <SDL2\SDL_surface.h>
 #include <stdexcept>
+
+SurfaceStorage::SurfaceStorage(const char* fontPath, int fontSize)
+{
+    this->myFont = TTF_OpenFont(fontPath, fontSize);
+}
 
 SDL_Surface* SurfaceStorage::LoadBMP(const std::string name, const char* path)
 {
     if (auto surface = SDL_LoadBMP(path)) {
         
-        auto findResult = std::find_if(this->storage.begin(), this->storage.end(), [&name](std::pair<const std::string, SDL_Surface*>& item) {
-            return item.first == name;
-        });
+        auto findResult = this->storage.find(name);
 
         findResult == this->storage.end()
             ? this->storage[name] = surface
@@ -22,14 +24,18 @@ SDL_Surface* SurfaceStorage::LoadBMP(const std::string name, const char* path)
 
 void SurfaceStorage::SetBMP(const std::string name, SDL_Surface* surface)
 {
+    auto findResult = this->storage.find(name);
+
+    if (findResult != this->storage.end()) {
+        SDL_FreeSurface(findResult->second);
+    }
+
     this->storage[name] = surface;
 }
 
 SDL_Surface* SurfaceStorage::GetBMP(const std::string name)
 {
-    auto findResult = std::find_if(this->storage.begin(), this->storage.end(), [&name](std::pair<const std::string, SDL_Surface*>& item) {
-        return item.first == name;
-        });
+    auto findResult = this->storage.find(name);
 
     return findResult != this->storage.end()
         ? findResult->second
@@ -38,9 +44,7 @@ SDL_Surface* SurfaceStorage::GetBMP(const std::string name)
 
 void SurfaceStorage::FreeSurface(const std::string name)
 {
-    auto findResult = std::find_if(this->storage.begin(), this->storage.end(), [&name](std::pair<const std::string, SDL_Surface*>& item) {
-        return item.first == name;
-        });
+    auto findResult = this->storage.find(name);
 
     if (findResult != this->storage.end()) {
         SDL_FreeSurface(findResult->second);

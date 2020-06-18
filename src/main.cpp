@@ -1,28 +1,26 @@
 #include <SDL2/SDL.h>
-#include "SurfaceStorage.h"
+#include <SDL2/SDL_ttf.h>
 #include <Windows.h>
-#include <stdexcept>
-#include <algorithm>
+
+#include "SurfaceStorage.h"
 #include "GameModel.h"
 #include "Controller.h"
 #include "View.h"
-#include <SDL2/SDL_ttf.h>
+
+#include <stdexcept>
+#include <algorithm>
 
 #undef main 
 
-int Init(const char* title, SDL_Window* window, SDL_Surface* scr, int SCREEN_WIDTH, int SCREEN_HEIGHT, uint32_t flags) {
+namespace {
+    constexpr char* PLATFORM_BACKGROUND_PATH = "bmp/platform.bmp";
+    constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "bmp/dividingStrip.bmp";
+    constexpr char* BALL_BACKGROUND_PATH = "bmp/ball.bmp";
     
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        throw std::runtime_error("Fatal initialization error!");
+    constexpr char* FONT_PATH = "font/fast99.ttf";
+    constexpr int FONT_SIZE = 36;
 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, flags);
-    
-    if (!window)
-        throw std::runtime_error("window == nullptr");
-
-    scr = SDL_GetWindowSurface(window);
-
-    return 0;
+    constexpr char* WINDOW_TITLE = "PingPong";
 }
 
 int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage) {
@@ -38,28 +36,26 @@ int main(int argc, char** args) {
     //while (!IsDebuggerPresent()) {
     //    Sleep(1);
     //}
-    const char* PLATFORM_BACKGROUND_PATH = "bmp/platform.bmp";
-    const char* SIVIDING_STRIP_BACKGROUND_PATH = "bmp/dividingStrip.bmp";
-    const char* WINDOW_TITLE = "PingPong";
     
     try{
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
-            throw std::runtime_error("Fatal initialization error!");
+            throw std::runtime_error("Fatal initialization SDL error!");
 
         if (TTF_Init() != 0)
-            throw std::runtime_error("Fatal initialization error!");
+            throw std::runtime_error("Fatal initialization TTF error!");
         
         
-        SurfaceStorage surfaceStorage;
+        SurfaceStorage surfaceStorage = SurfaceStorage(FONT_PATH, FONT_SIZE);
         Controller controller = Controller();
         View view = View();
 
-        WindowModel windowModel = WindowModel(WINDOW_TITLE);
+        Window windowModel = Window(WINDOW_TITLE, SDL_WINDOW_SHOWN, 1024, 768);
         if (!windowModel.window)
             throw std::runtime_error("window == nullptr");
         
         GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", PLATFORM_BACKGROUND_PATH));
         gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", SIVIDING_STRIP_BACKGROUND_PATH);
+        gameModel.ball = Ball({},surfaceStorage.LoadBMP("ball", BALL_BACKGROUND_PATH));
 
         while (true) {
             controller.UpdateModel(gameModel);

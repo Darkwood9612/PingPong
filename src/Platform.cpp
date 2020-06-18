@@ -3,24 +3,6 @@
 
 Platform::Platform()
 {
-}
-
-int Platform::GetPosX()
-{
-	return this->rect.x;
-}
-
-int Platform::GetPosY()
-{
-	return this->rect.y;
-}
-
-void Platform::SetPosX(int newValue)
-{
-	this->rect.x = newValue;
-}
-
-void Platform::SetPosY(int newValue)
-{
-	this->rect.y = newValue;;
+	rect = SDL_Rect();
+	background = nullptr;
 }

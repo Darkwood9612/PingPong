@@ -1,9 +1,5 @@
 #include "Controller.h"
 
-Controller::Controller(void)
-{
-}
-
 void Controller::UpdateModel(GameModel& model)
 {
     if (!SDL_PollEvent(&event))
@@ -27,9 +23,13 @@ void Controller::KeyDown(SDL_Keysym& s, GameModel& model)
     {
     case SDLK_UP:
         model.PlayerPlatformMoveUp();
+        model.BotPlatformMoveUp();
+        model.AddPointToPlayer();
         break;
     case SDLK_DOWN:
         model.PlayerPlatformMoveDown();
+        model.BotPlatformMoveDown();
+        model.AddPointToBot();
         break;
     default:
         break;

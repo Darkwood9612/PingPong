@@ -5,7 +5,7 @@
 class Controller
 {
 public:
-	Controller(void);
+	Controller() { event = SDL_Event(); };
 
 	void UpdateModel(GameModel& model);
 	

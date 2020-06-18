@@ -6,10 +6,10 @@ class SurfaceStorage;
 class View
 {
 public:
-	View(void);
+	View();
 
-	void Draw(GameModel& gameModel, WindowModel& windowModel, SurfaceStorage& surfaceStorage);
+	void Draw(GameModel& gameModel, Window& window, SurfaceStorage& surfaceStorage);
 
 private:
-	void DrawScore(GameModel& gameModel, WindowModel& windowModel, SurfaceStorage& surfaceStorage);
+	void DrawScore(GameModel& gameModel, Window& window, SurfaceStorage& surfaceStorage);
 };
