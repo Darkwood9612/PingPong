@@ -12,16 +12,20 @@ public:
 	void PlayerPlatformMoveUp();
 	void BotPlatformMoveDown();
 	void BotPlatformMoveUp();
+	void MoveBall();
+	void RespawnBall() { ball.Respawn(screenCenter); };
 
 	SDL_Surface GetPlatformBackground();
+	SDL_Surface GetBallBackground();
 	SDL_Rect GetPlayerRect();
 	SDL_Rect GetBotRect();
+	SDL_Rect GetBallRect();
 
 	bool needCloseGame = false;
 
 	SDL_Surface* dividingStrip = nullptr;
 
-	void SetPlatformsSpeed(int newSpeed);
+	void SetGameSpeed(int newSpeed);
 
 	void AddPointToPlayer() { ++this->playerPoints; };
 	void AddPointToBot() { ++this->botPoints; };
@@ -31,15 +35,18 @@ public:
 
 	SDL_Surface* GetPlayerScoreSurface(int windowScore, SurfaceStorage& surfaceStorage);
 	SDL_Surface* GetBotScoreSurface(int windowScore, SurfaceStorage& surfaceStorage);
-	Ball ball;
+	void CreateBall(SDL_Surface* background, SDL_Rect rect = SDL_Rect());
 private:
 	const std::string playerPointsId = "playerScore";
 	const std::string botPointsId = "botScore";
 	int playerPoints = 0;
 	int botPoints = 0;
 
+	const int SCREEN_WIDTH;
 	const int SCREEN_HEIGHT;
-
+	SDL_Rect screenCenter;
+	
+	Ball ball;
 	Platform playerPlatform;
 	Platform botPlatform;
 };

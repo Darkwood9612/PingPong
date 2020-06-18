@@ -30,12 +30,12 @@ void View::Draw(GameModel& gameModel, Window& window, SurfaceStorage& surfaceSto
     SDL_FillRect(window.screen, NULL, SDL_MapRGB(window.screen->format, 0, 0, 0));
 
     SDL_Surface platformBackground = gameModel.GetPlatformBackground();
-    SDL_Surface ballBackground = gameModel.ball.GetBackGround();
+    SDL_Surface ballBackground = gameModel.GetBallBackground();
 
     SDL_Rect playerRect = gameModel.GetPlayerRect();
     SDL_Rect botRect = gameModel.GetBotRect();
     SDL_Rect dividingStripRect = window.GetDividingStripRect();
-    SDL_Rect ballRect = gameModel.ball.GetRect();
+    SDL_Rect ballRect = gameModel.GetBallRect();
 
     SDL_BlitSurface(gameModel.dividingStrip, NULL, window.screen, &dividingStripRect);
     SDL_BlitSurface(&platformBackground, NULL, window.screen, &playerRect);

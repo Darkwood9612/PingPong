@@ -33,7 +33,7 @@ namespace {
     };
 }
 
-GameModel::GameModel(Window& window, SDL_Surface* platformSurface) : SCREEN_HEIGHT(window.SCREEN_HEIGHT) {
+GameModel::GameModel(Window& window, SDL_Surface* platformSurface) : SCREEN_HEIGHT(window.SCREEN_HEIGHT), SCREEN_WIDTH(window.SCREEN_WIDTH) {
 	if (!platformSurface)
 		throw std::runtime_error("platformSurface == nullptr");
 
@@ -41,6 +41,8 @@ GameModel::GameModel(Window& window, SDL_Surface* platformSurface) : SCREEN_HEIG
 	SDL_Rect botRect = { int(window.SCREEN_WIDTH * 0.8), int(window.SCREEN_HEIGHT / 2 - platformSurface->h / 2), platformSurface->w, platformSurface->h};
 	playerPlatform = Platform(playerRect, platformSurface);
 	botPlatform = Platform(botRect, platformSurface);
+    screenCenter.x = window.SCREEN_WIDTH / 2;
+    screenCenter.y = window.SCREEN_HEIGHT / 2;
 };
 
 void GameModel::PlayerPlatformMoveDown()
@@ -67,9 +69,19 @@ void GameModel::BotPlatformMoveUp()
         botPlatform.rect.y = botPlatform.rect.y - 1 * botPlatform.speed;
 }
 
+void GameModel::MoveBall()
+{
+    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
 SDL_Surface GameModel::GetPlatformBackground()
 {
 	return playerPlatform.background ? *playerPlatform.background : SDL_Surface();
+}
+
+SDL_Surface GameModel::GetBallBackground()
+{
+    return ball.background ? *ball.background : SDL_Surface();;
 }
 
 SDL_Rect GameModel::GetPlayerRect()
@@ -82,10 +94,16 @@ SDL_Rect GameModel::GetBotRect()
 	return botPlatform.rect;
 }
 
-void GameModel::SetPlatformsSpeed(int newSpeed)
+SDL_Rect GameModel::GetBallRect()
+{
+    return ball.rect;
+}
+
+void GameModel::SetGameSpeed(int newSpeed)
 {
     playerPlatform.speed = newSpeed;
     botPlatform.speed = newSpeed;
+    ball.speed = newSpeed;
 }
 
 SDL_Surface* GameModel::GetPlayerScoreSurface(int windowScore, SurfaceStorage& surfaceStorage)
@@ -100,4 +118,9 @@ SDL_Surface* GameModel::GetBotScoreSurface(int windowScore, SurfaceStorage& surf
     return botPoints != windowScore
         ? ScoreToSurface(botPoints, botPointsId, surfaceStorage)
         : surfaceStorage.GetBMP(botPointsId);
+}
+
+void GameModel::CreateBall(SDL_Surface* background, SDL_Rect rect)
+{
+    ball = Ball(rect, background);
 }

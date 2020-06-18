@@ -55,7 +55,7 @@ int main(int argc, char** args) {
         
         GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", PLATFORM_BACKGROUND_PATH));
         gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", SIVIDING_STRIP_BACKGROUND_PATH);
-        gameModel.ball = Ball({},surfaceStorage.LoadBMP("ball", BALL_BACKGROUND_PATH));
+        gameModel.CreateBall(surfaceStorage.LoadBMP("ball", BALL_BACKGROUND_PATH));
 
         while (true) {
             controller.UpdateModel(gameModel);

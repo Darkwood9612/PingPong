@@ -1,16 +1,14 @@
 #pragma once
 #include "Platform.h"
 
-class Ball : private Platform
+class Ball : public Platform
 {
 public:
 	Ball(SDL_Rect _rect, SDL_Surface* _background);
 	Ball() {};
 
-	SDL_Rect GetRect();
-	SDL_Surface GetBackGround();
-
-	void Respawn();
+	void Respawn(SDL_Rect spawnPoint);
+	void Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 private:
-	float angleOfFlight = 0.f;
+	float angleOfFlight = 10.f;
 };

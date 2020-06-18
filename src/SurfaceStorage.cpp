@@ -4,6 +4,11 @@
 SurfaceStorage::SurfaceStorage(const char* fontPath, int fontSize)
 {
     this->myFont = TTF_OpenFont(fontPath, fontSize);
+
+    if (!this->myFont){
+        std::string err = TTF_GetError();
+        throw std::runtime_error("Error in function 'TTF_OpenFont': " + err);
+    }
 }
 
 SDL_Surface* SurfaceStorage::LoadBMP(const std::string name, const char* path)

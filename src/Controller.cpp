@@ -2,6 +2,8 @@
 
 void Controller::UpdateModel(GameModel& model)
 {
+   
+
     if (!SDL_PollEvent(&event))
         return;
 
@@ -25,11 +27,13 @@ void Controller::KeyDown(SDL_Keysym& s, GameModel& model)
         model.PlayerPlatformMoveUp();
         model.BotPlatformMoveUp();
         model.AddPointToPlayer();
+        model.RespawnBall();
         break;
     case SDLK_DOWN:
         model.PlayerPlatformMoveDown();
         model.BotPlatformMoveDown();
         model.AddPointToBot();
+        model.MoveBall();
         break;
     default:
         break;
