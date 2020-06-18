@@ -13,7 +13,6 @@ public:
 	void BotPlatformMoveDown();
 	void BotPlatformMoveUp();
 	void MoveBall();
-	void RespawnBall() { ball.Respawn(screenCenter); };
 
 	SDL_Surface GetPlatformBackground();
 	SDL_Surface GetBallBackground();
@@ -36,6 +35,7 @@ public:
 	SDL_Surface* GetPlayerScoreSurface(int windowScore, SurfaceStorage& surfaceStorage);
 	SDL_Surface* GetBotScoreSurface(int windowScore, SurfaceStorage& surfaceStorage);
 	void CreateBall(SDL_Surface* background, SDL_Rect rect = SDL_Rect());
+	SDL_Rect GetScreenCenter() { return screenCenter; };
 private:
 	const std::string playerPointsId = "playerScore";
 	const std::string botPointsId = "botScore";

@@ -1,21 +1,25 @@
 #include "Controller.h"
 
+
 void Controller::UpdateModel(GameModel& model)
 {
-   
+    if (clock() - lastApply > 10) {
+        model.MoveBall();
+        lastApply = clock();
+    }
 
-    if (!SDL_PollEvent(&event))
-        return;
+    while (SDL_PollEvent(&event)) {
 
-    switch (event.type){
+        switch (event.type) {
         case SDL_QUIT:
             model.needCloseGame = true;
-            break; 
+            break;
         case SDL_KEYDOWN:
             KeyDown(event.key.keysym, model);
             break;
         default:
-            break;
+            return;
+        }
     }
 }
 
@@ -26,14 +30,10 @@ void Controller::KeyDown(SDL_Keysym& s, GameModel& model)
     case SDLK_UP:
         model.PlayerPlatformMoveUp();
         model.BotPlatformMoveUp();
-        model.AddPointToPlayer();
-        model.RespawnBall();
         break;
     case SDLK_DOWN:
         model.PlayerPlatformMoveDown();
         model.BotPlatformMoveDown();
-        model.AddPointToBot();
-        model.MoveBall();
         break;
     default:
         break;

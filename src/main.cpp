@@ -9,6 +9,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <filesystem>
 
 #undef main 
 
@@ -36,7 +37,13 @@ int main(int argc, char** args) {
     //while (!IsDebuggerPresent()) {
     //    Sleep(1);
     //}
-    
+    std::string tmp;
+    auto getAbsoluatePath = [&](const char* relativePath) {
+        tmp = (std::filesystem::path(args[0]).parent_path() / relativePath).string();
+        printf("path: \s", tmp.data());
+        return tmp.c_str();
+    };
+
     try{
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             throw std::runtime_error("Fatal initialization SDL error!");
@@ -45,27 +52,27 @@ int main(int argc, char** args) {
             throw std::runtime_error("Fatal initialization TTF error!");
         
         
-        SurfaceStorage surfaceStorage = SurfaceStorage(FONT_PATH, FONT_SIZE);
+        SurfaceStorage surfaceStorage = SurfaceStorage(getAbsoluatePath(FONT_PATH), FONT_SIZE);
         Controller controller = Controller();
         View view = View();
 
-        Window windowModel = Window(WINDOW_TITLE, SDL_WINDOW_SHOWN, 1024, 768);
-        if (!windowModel.window)
+        Window window = Window(WINDOW_TITLE, SDL_WINDOW_SHOWN, 1024, 768);
+        if (!window.window)
             throw std::runtime_error("window == nullptr");
         
-        GameModel gameModel = GameModel(windowModel, surfaceStorage.LoadBMP("platform", PLATFORM_BACKGROUND_PATH));
-        gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", SIVIDING_STRIP_BACKGROUND_PATH);
-        gameModel.CreateBall(surfaceStorage.LoadBMP("ball", BALL_BACKGROUND_PATH));
+        GameModel gameModel = GameModel(window, surfaceStorage.LoadBMP("platform", getAbsoluatePath(PLATFORM_BACKGROUND_PATH)));
+        gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", getAbsoluatePath(SIVIDING_STRIP_BACKGROUND_PATH));
+        gameModel.CreateBall(surfaceStorage.LoadBMP("ball", getAbsoluatePath(BALL_BACKGROUND_PATH)), gameModel.GetScreenCenter());
 
         while (true) {
             controller.UpdateModel(gameModel);
-            view.Draw(gameModel, windowModel, surfaceStorage);
+            view.Draw(gameModel, window, surfaceStorage);
             
             if (gameModel.needCloseGame)
                 break;
         }
 
-        return Quit(windowModel.window, surfaceStorage);
+        return Quit(window.window, surfaceStorage);
     }
     catch (const std::exception& e){
         MessageBox(NULL, e.what(), NULL, MB_OK);
