@@ -17,7 +17,11 @@ namespace {
     constexpr char* PLATFORM_BACKGROUND_PATH = "image/platform.bmp";
     constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "image/dividingStrip.bmp";
     constexpr char* BALL_BACKGROUND_PATH = "image/ball.bmp";
-    
+
+    constexpr char* SOUND_WALL_COLLISION_PATH = "sound/wall—ollision.wav";
+    constexpr char* SOUND_PLATFORM_COLLISION_PATH = "sound/platform—ollision.wav";
+    constexpr char* SOUND_DEFEAT_PATH = "sound/defeat.wav";
+
     constexpr char* FONT_PATH = "font/fast99.ttf";
     constexpr int FONT_SIZE = 36;
 
@@ -37,10 +41,10 @@ int main(int argc, char** args) {
     //while (!IsDebuggerPresent()) {
     //    Sleep(1);
     //}
+
     std::string tmp;
     auto getAbsoluatePath = [&](const char* relativePath) {
         tmp = (std::filesystem::path(args[0]).parent_path() / relativePath).string();
-        printf("path: \s", tmp.data());
         return tmp.c_str();
     };
 

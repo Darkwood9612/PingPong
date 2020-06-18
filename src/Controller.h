@@ -12,6 +12,7 @@ public:
 	
 
 private:
+	const int BALL_UPDATE_PAUSE = 300;
 	void KeyDown(SDL_Keysym& s, GameModel& model);
 	SDL_Event event;
 	clock_t lastApply = 0;

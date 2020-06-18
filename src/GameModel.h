@@ -19,6 +19,7 @@ public:
 	SDL_Rect GetPlayerRect();
 	SDL_Rect GetBotRect();
 	SDL_Rect GetBallRect();
+	int GetBallSpeed() { return ball.speed; };
 
 	bool needCloseGame = false;
 
@@ -47,6 +48,9 @@ private:
 	SDL_Rect screenCenter;
 	
 	Ball ball;
+
+	const float X_PLAYER_PLATFORM_OFFSET = 0.1f;
+	const float X_BOT_PLATFORM_OFFSET = 0.9f;
 	Platform playerPlatform;
 	Platform botPlatform;
 };

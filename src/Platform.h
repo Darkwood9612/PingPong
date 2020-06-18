@@ -11,5 +11,5 @@ public:
 	SDL_Surface* background;
 	SDL_Rect rect;
 
-	int speed = 15;
+	int speed = 12;
 };

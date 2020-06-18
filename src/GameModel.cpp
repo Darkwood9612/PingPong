@@ -37,8 +37,8 @@ GameModel::GameModel(Window& window, SDL_Surface* platformSurface) : SCREEN_HEIG
 	if (!platformSurface)
 		throw std::runtime_error("platformSurface == nullptr");
 
-	SDL_Rect playerRect = { int(window.SCREEN_WIDTH * 0.2), int(window.SCREEN_HEIGHT/2 - platformSurface->h /2), platformSurface->w, platformSurface->h};
-	SDL_Rect botRect = { int(window.SCREEN_WIDTH * 0.8), int(window.SCREEN_HEIGHT / 2 - platformSurface->h / 2), platformSurface->w, platformSurface->h};
+	SDL_Rect playerRect = { int(window.SCREEN_WIDTH * X_PLAYER_PLATFORM_OFFSET), int(window.SCREEN_HEIGHT/2 - platformSurface->h /2), platformSurface->w, platformSurface->h};
+	SDL_Rect botRect = { int(window.SCREEN_WIDTH * X_BOT_PLATFORM_OFFSET), int(window.SCREEN_HEIGHT / 2 - platformSurface->h / 2), platformSurface->w, platformSurface->h};
 	playerPlatform = Platform(playerRect, platformSurface);
 	botPlatform = Platform(botRect, platformSurface);
     screenCenter.x = window.SCREEN_WIDTH / 2;
@@ -71,9 +71,9 @@ void GameModel::BotPlatformMoveUp()
 
 void GameModel::MoveBall()
 {
-    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlatformBackground(), GetPlayerRect(), GetBotRect(), []() {}, [&](bool isPlayerWin){
+    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlayerRect(), GetBotRect(), []() {}, [&](bool isPlayerWin){
         isPlayerWin ? this->AddPointToPlayer() : this->AddPointToBot();
-        //ball.Respawn(screenCenter);
+        ball.Respawn(screenCenter, !isPlayerWin);
     });
 }
 

@@ -21,27 +21,50 @@ Ball::Ball(SDL_Rect _rect, SDL_Surface* background)
 {
 	this->rect = _rect;
 	this->background = background;
-    this->speed = 3;
 }
 
-void Ball::Respawn(SDL_Rect spawnPoint)
+void Ball::operator=(const Ball& ball)
+{
+    this->angleOfFlight = ball.angleOfFlight;
+    this->background = ball.background;
+    this->rect = ball.rect;
+    this->speed = ball.speed;
+    this->STEP = ball.STEP;
+}
+
+void Ball::Respawn(SDL_Rect spawnPoint, bool isPlayerLose)
 {
 	rect = spawnPoint;
-    angleOfFlight = 112.f;
+    float randNum = rand() % 90;
+    angleOfFlight = isPlayerLose ? 135.f + randNum : 405.f -( randNum > 45.f ? randNum : randNum +360.f);
 }
 
-void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const SDL_Surface& ballBackground, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback)
+void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback)
 {
-    auto nextPoint = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+    auto nextPoint = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
     
-    if (nextPoint.x <= playerRect.x + ballBackground.w &&
-        nextPoint.y <= playerRect.y &&
-        nextPoint.y >= playerRect.y + ballBackground.h) {
+    if (nextPoint.x <= playerRect.x + playerRect.w &&
+        nextPoint.x >= playerRect.x &&
+        nextPoint.y >= playerRect.y &&
+        nextPoint.y <= playerRect.y + playerRect.h) {
 
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
-        rect = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+        rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
+        soundCallback();
+        return;
+    }
+
+    if (nextPoint.x <= botRect.x + botRect.w &&
+        nextPoint.x >= botRect.x &&
+        nextPoint.y >= botRect.y &&
+        nextPoint.y <= botRect.y + botRect.h) {
+
+        angleOfFlight = 180 - angleOfFlight;
+        angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
+
+        rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
         soundCallback();
         return;
     }
@@ -57,7 +80,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const SDL_Surfa
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
-        rect = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+        rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
         soundCallback();
         scoreCallback(nextPoint.x <= 0 ? false: true);
         return;
@@ -67,7 +90,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const SDL_Surfa
     if (nextPoint.y <= 0 || nextPoint.y >= SCREEN_HEIGHT) {
         
         angleOfFlight = 360 - angleOfFlight;
-        rect = GetPositionPointOnCircle(1 * speed, rect, angleOfFlight);
+        rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
         soundCallback();
         return;
     }

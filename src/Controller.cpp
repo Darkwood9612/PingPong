@@ -3,7 +3,7 @@
 
 void Controller::UpdateModel(GameModel& model)
 {
-    if (clock() - lastApply > 10) {
+    if (clock() - lastApply > BALL_UPDATE_PAUSE / model.GetBallSpeed()) {
         model.MoveBall();
         lastApply = clock();
     }
