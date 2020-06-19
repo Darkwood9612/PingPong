@@ -13,23 +13,30 @@ ArtificialIntelligencePlatform::ArtificialIntelligencePlatform()
 		background = nullptr;
 }
 
+void ArtificialIntelligencePlatform::operator=(const ArtificialIntelligencePlatform& platformAI)
+{
+	this->rect = platformAI.rect;
+	this->background = platformAI.background;
+	this->speed = platformAI.speed;
+}
+
 void ArtificialIntelligencePlatform::HitBall(const int SCREEN_HEIGHT, float angleBallFlight, SDL_Rect ballRect)
 {	
-	TryCatchBall(SCREEN_HEIGHT, CalculateBallTrajectory(angleBallFlight, ballRect));
+	TryCatchBall(SCREEN_HEIGHT, angleBallFlight, ballRect);
 }
 
-SDL_Rect ArtificialIntelligencePlatform::CalculateBallTrajectory(float angleBallFlight, SDL_Rect ballRect)
-{
-	float radius = rect.x - ballRect.x;
-	return Ball::GetPositionPointOnCircle(radius , ballRect, angleBallFlight);
-}
-
-void ArtificialIntelligencePlatform::TryCatchBall(const int SCREEN_HEIGHT, SDL_Rect ballPointTarget)
+void ArtificialIntelligencePlatform::TryCatchBall(const int SCREEN_HEIGHT, float angleBallFlight, SDL_Rect ballPointTarget)
 {	
-	auto halfHeight = rect.h / 2;
-	ballPointTarget.y -= rand() % halfHeight;
+	bool isBallFlightDown = 360 - angleBallFlight > 180;
+	bool isBallFlightToPlayer = isBallFlightDown ? angleBallFlight > 90 : angleBallFlight < 270;
 
-	auto STEP = 5;
+	if (isBallFlightToPlayer)
+		return;
+
+	int randoOffset = rand() % rect.h;
+	isBallFlightDown ? ballPointTarget.y  += randoOffset : ballPointTarget.y -= randoOffset;
+	
+	int halfHeight = rect.h / 2;
 	auto centrPlatformY = rect.y + halfHeight;
 	bool abovePoint = ballPointTarget.y <= centrPlatformY - halfHeight;
 	bool belowPoint = ballPointTarget.y >= centrPlatformY + halfHeight;

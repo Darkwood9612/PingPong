@@ -8,9 +8,10 @@ public:
 	ArtificialIntelligencePlatform(SDL_Rect _rect, SDL_Surface* _background);
 	ArtificialIntelligencePlatform();
 
+	void operator=(const ArtificialIntelligencePlatform& platformAI);
+	
 	void HitBall(const int SCREEN_HEIGHT, float angleBallFlight, SDL_Rect ballRect);
 private:
-
-	SDL_Rect CalculateBallTrajectory(float angleBallFlight, SDL_Rect ballRect);
-	void TryCatchBall(const int SCREEN_HEIGHT, SDL_Rect ballPointTarget);
+	const int STEP = 3;
+	void TryCatchBall(const int SCREEN_HEIGHT, float angleBallFlight, SDL_Rect ballPointTarget);
 };

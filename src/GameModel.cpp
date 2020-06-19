@@ -70,7 +70,7 @@ void GameModel::MoveBall()
         },
         [&](bool isPlayerWin){
         isPlayerWin ? this->AddPointToPlayer() : this->AddPointToBot();
-        ball.Respawn(screenCenter, !isPlayerWin);
+        ball.Respawn(screenCenter, isPlayerWin);
     });
 }
 

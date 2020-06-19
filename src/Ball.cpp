@@ -8,6 +8,7 @@ namespace {
 
 SDL_Rect Ball::GetPositionPointOnCircle(float radius, const SDL_Rect& centrPos, float degrees)
 {
+    srand(time(0));
     float radian = degrees * (PI / 180);
     float x = radius * cos(radian) + centrPos.x;
     float y = radius * sin(radian) + centrPos.y;
@@ -17,6 +18,7 @@ SDL_Rect Ball::GetPositionPointOnCircle(float radius, const SDL_Rect& centrPos, 
 
 Ball::Ball(SDL_Rect _rect, SDL_Surface* background)
 {
+    srand(time(0));
 	this->rect = _rect;
 	this->background = background;
 }
@@ -34,6 +36,8 @@ void Ball::Respawn(SDL_Rect spawnPoint, bool isPlayerLose)
 {
 	rect = spawnPoint;
     float randNum = rand() % 90;
+    randNum = randNum < 10 ? 10 : randNum;
+
     angleOfFlight = isPlayerLose ? 135.f + randNum : 405.f -( randNum > 45.f ? randNum : randNum +360.f);
 }
 
@@ -69,29 +73,30 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         return;
     }
 
-    if (nextPoint.x > 0 && nextPoint.x < SCREEN_WIDTH && nextPoint.y > 0 && nextPoint.y < SCREEN_HEIGHT) {
+    if (nextPoint.x <= 1 || nextPoint.x >= SCREEN_WIDTH - 1) {
 
-        rect = nextPoint;
-        return;
-    }
-
-    if (nextPoint.x <= 0 || nextPoint.x >= SCREEN_WIDTH) {
-        
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
         soundCallback();
-        scoreCallback(nextPoint.x <= 0 ? false: true);
+        scoreCallback(nextPoint.x <= 0 ? false : true);
         return;
     }
 
 
-    if (nextPoint.y <= 0 || nextPoint.y >= SCREEN_HEIGHT) {
-        
+    if (nextPoint.y <= 1 || nextPoint.y >= SCREEN_HEIGHT - 1) {
+
         angleOfFlight = 360 - angleOfFlight;
+
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
         soundCallback();
+        return;
+    }
+
+    if (nextPoint.x > 0 && nextPoint.x < SCREEN_WIDTH && nextPoint.y > 0 && nextPoint.y < SCREEN_HEIGHT) {
+
+        rect = nextPoint;
         return;
     }
 }
