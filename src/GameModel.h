@@ -3,6 +3,7 @@
 #include "SurfaceStorage.h"
 #include "Ball.h"
 #include "AudioStorage.h"
+#include "ArtificialIntelligencePlatform.h"
 
 class GameModel
 {
@@ -11,8 +12,7 @@ public:
 
 	void PlayerPlatformMoveDown();
 	void PlayerPlatformMoveUp();
-	void BotPlatformMoveDown();
-	void BotPlatformMoveUp();
+	void BotPlatformMove();
 	void MoveBall();
 
 	SDL_Surface GetPlatformBackground();
@@ -56,5 +56,5 @@ private:
 	const float X_PLAYER_PLATFORM_OFFSET = 0.1f;
 	const float X_BOT_PLATFORM_OFFSET = 0.9f;
 	Platform playerPlatform;
-	Platform botPlatform;
+	ArtificialIntelligencePlatform botPlatform;
 };

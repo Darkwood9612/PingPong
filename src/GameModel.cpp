@@ -40,7 +40,7 @@ GameModel::GameModel(Window& window, SDL_Surface* platformSurface) : SCREEN_HEIG
 	SDL_Rect playerRect = { int(window.SCREEN_WIDTH * X_PLAYER_PLATFORM_OFFSET), int(window.SCREEN_HEIGHT/2 - platformSurface->h /2), platformSurface->w, platformSurface->h};
 	SDL_Rect botRect = { int(window.SCREEN_WIDTH * X_BOT_PLATFORM_OFFSET), int(window.SCREEN_HEIGHT / 2 - platformSurface->h / 2), platformSurface->w, platformSurface->h};
 	playerPlatform = Platform(playerRect, platformSurface);
-	botPlatform = Platform(botRect, platformSurface);
+	botPlatform = ArtificialIntelligencePlatform(botRect, platformSurface);
     screenCenter.x = window.SCREEN_WIDTH / 2;
     screenCenter.y = window.SCREEN_HEIGHT / 2;
 };
@@ -57,16 +57,9 @@ void GameModel::PlayerPlatformMoveUp()
 		playerPlatform.rect.y = playerPlatform.rect.y - 1 * playerPlatform.speed;
 }
 
-void GameModel::BotPlatformMoveDown()
+void GameModel::BotPlatformMove()
 {
-    if (botPlatform.rect.y + botPlatform.rect.h < SCREEN_HEIGHT)
-        botPlatform.rect.y = botPlatform.rect.y + 1 * botPlatform.speed;
-}
-
-void GameModel::BotPlatformMoveUp()
-{
-    if (botPlatform.rect.y > 0)
-        botPlatform.rect.y = botPlatform.rect.y - 1 * botPlatform.speed;
+    botPlatform.HitBall(SCREEN_HEIGHT, ball.GetAngleOfFlight(), ball.rect);
 }
 
 void GameModel::MoveBall()

@@ -5,6 +5,7 @@ void Controller::UpdateModel(GameModel& model)
 {
     if (clock() - lastApply > BALL_UPDATE_PAUSE / model.GetBallSpeed()) {
         model.MoveBall();
+        model.BotPlatformMove();
         lastApply = clock();
     }
 
@@ -29,11 +30,9 @@ void Controller::KeyDown(SDL_Keysym& s, GameModel& model)
     {
     case SDLK_UP:
         model.PlayerPlatformMoveUp();
-        model.BotPlatformMoveUp();
         break;
     case SDLK_DOWN:
         model.PlayerPlatformMoveDown();
-        model.BotPlatformMoveDown();
         break;
     default:
         break;

@@ -4,17 +4,15 @@
 
 namespace {
     constexpr double PI = 3.14159265358979323846;
+}
 
-    SDL_Rect GetPositionPointOnCircle(float radius,
-        const SDL_Rect& centrPos,
-        float degrees)
-    {
-        float radian = degrees * (PI / 180);
-        float x = radius * cos(radian) + centrPos.x;
-        float y = radius * sin(radian) + centrPos.y;
+SDL_Rect Ball::GetPositionPointOnCircle(float radius, const SDL_Rect& centrPos, float degrees)
+{
+    float radian = degrees * (PI / 180);
+    float x = radius * cos(radian) + centrPos.x;
+    float y = radius * sin(radian) + centrPos.y;
 
-        return { int(x), int(y),0,0 };
-    }
+    return { int(x), int(y),0,0 };
 }
 
 Ball::Ball(SDL_Rect _rect, SDL_Surface* background)
