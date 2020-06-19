@@ -24,7 +24,7 @@ SDL_Surface* SurfaceStorage::LoadBMP(const std::string name, const char* path)
         return surface;
     }
     
-    throw std::runtime_error("LoadBMP error: result == nullptr");
+    throw std::runtime_error("LoadBMP error: surface == nullptr");
 }
 
 void SurfaceStorage::SetBMP(const std::string name, SDL_Surface* surface)

@@ -71,7 +71,11 @@ void GameModel::BotPlatformMoveUp()
 
 void GameModel::MoveBall()
 {
-    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlayerRect(), GetBotRect(), []() {}, [&](bool isPlayerWin){
+    ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlayerRect(), GetBotRect(),
+        [&]() {
+            audioStorage.PlayMusic(audioStorage.collisionMusicName, 1);
+        },
+        [&](bool isPlayerWin){
         isPlayerWin ? this->AddPointToPlayer() : this->AddPointToBot();
         ball.Respawn(screenCenter, !isPlayerWin);
     });

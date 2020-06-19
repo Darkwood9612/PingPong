@@ -48,11 +48,12 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         nextPoint.y >= playerRect.y &&
         nextPoint.y <= playerRect.y + playerRect.h) {
 
+        soundCallback();
+
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
-        soundCallback();
         return;
     }
 
@@ -60,12 +61,13 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         nextPoint.x >= botRect.x &&
         nextPoint.y >= botRect.y &&
         nextPoint.y <= botRect.y + botRect.h) {
-
+        
+        soundCallback();
+        
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
-        soundCallback();
         return;
     }
 

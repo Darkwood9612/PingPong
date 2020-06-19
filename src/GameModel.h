@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "SurfaceStorage.h"
 #include "Ball.h"
+#include "AudioStorage.h"
 
 class GameModel
 {
@@ -37,6 +38,9 @@ public:
 	SDL_Surface* GetBotScoreSurface(int windowScore, SurfaceStorage& surfaceStorage);
 	void CreateBall(SDL_Surface* background, SDL_Rect rect = SDL_Rect());
 	SDL_Rect GetScreenCenter() { return screenCenter; };
+
+	AudioStorage audioStorage;
+
 private:
 	const std::string playerPointsId = "playerScore";
 	const std::string botPointsId = "botScore";

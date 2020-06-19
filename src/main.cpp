@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include <Windows.h>
 
 #include "SurfaceStorage.h"
@@ -10,29 +11,37 @@
 #include <stdexcept>
 #include <algorithm>
 #include <filesystem>
+#include "AudioStorage.h"
 
 #undef main 
 
 namespace {
-    constexpr char* PLATFORM_BACKGROUND_PATH = "image/platform.bmp";
-    constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "image/dividingStrip.bmp";
-    constexpr char* BALL_BACKGROUND_PATH = "image/ball.bmp";
+    constexpr char* PLATFORM_BACKGROUND_PATH = "image\\platform.bmp";
+    constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "image\\dividingStrip.bmp";
+    constexpr char* BALL_BACKGROUND_PATH = "image\\ball.bmp";
 
-    constexpr char* SOUND_WALL_COLLISION_PATH = "sound/wall—ollision.wav";
-    constexpr char* SOUND_PLATFORM_COLLISION_PATH = "sound/platform—ollision.wav";
-    constexpr char* SOUND_DEFEAT_PATH = "sound/defeat.wav";
+    constexpr char* SOUND_COLLISION_PATH = "sound\\collision.mid";
 
-    constexpr char* FONT_PATH = "font/fast99.ttf";
+    constexpr int AUDIO_BUFFERS = 4096;
+
+    constexpr char* FONT_PATH = "font\\fast99.ttf";
     constexpr int FONT_SIZE = 36;
 
     constexpr char* WINDOW_TITLE = "PingPong";
 }
 
-int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage) {
+int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage, AudioStorage& audioStorage) {
 
     surfaceStorage.FreeAllSurfaces();
+    audioStorage.FreeAllMusic();
+    
     window ? SDL_DestroyWindow(window) : throw std::runtime_error("window == nullptr");
+    
+    Mix_CloseAudio();
+    Mix_Quit();
+    TTF_Quit();
     SDL_Quit();
+    
     return 0;
 }
 
@@ -49,13 +58,21 @@ int main(int argc, char** args) {
     };
 
     try{
-        if (SDL_Init(SDL_INIT_VIDEO) != 0)
-            throw std::runtime_error("Fatal initialization SDL error!");
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+            std::string err = SDL_GetError();
+            throw std::runtime_error("Fatal initialization SDL error: " + err);
+        }    
 
-        if (TTF_Init() != 0)
-            throw std::runtime_error("Fatal initialization TTF error!");
-        
-        
+        if (TTF_Init() != 0) {
+            std::string err = TTF_GetError();
+            throw std::runtime_error("Fatal initialization TTF error: " + err);
+        }
+
+        if (MIX_INIT_MID != Mix_Init(MIX_INIT_MID)) {
+            std::string err = Mix_GetError();
+            throw std::runtime_error("Could not initialize mixer Mix_Init: " + err);
+        }
+
         SurfaceStorage surfaceStorage = SurfaceStorage(getAbsoluatePath(FONT_PATH), FONT_SIZE);
         Controller controller = Controller();
         View view = View();
@@ -67,6 +84,9 @@ int main(int argc, char** args) {
         GameModel gameModel = GameModel(window, surfaceStorage.LoadBMP("platform", getAbsoluatePath(PLATFORM_BACKGROUND_PATH)));
         gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", getAbsoluatePath(SIVIDING_STRIP_BACKGROUND_PATH));
         gameModel.CreateBall(surfaceStorage.LoadBMP("ball", getAbsoluatePath(BALL_BACKGROUND_PATH)), gameModel.GetScreenCenter());
+        
+        gameModel.audioStorage = AudioStorage(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, AUDIO_BUFFERS);
+        gameModel.audioStorage.LoadMID(gameModel.audioStorage.collisionMusicName, getAbsoluatePath(SOUND_COLLISION_PATH));
 
         while (true) {
             controller.UpdateModel(gameModel);
@@ -76,7 +96,7 @@ int main(int argc, char** args) {
                 break;
         }
 
-        return Quit(window.window, surfaceStorage);
+        return Quit(window.window, surfaceStorage, gameModel.audioStorage);
     }
     catch (const std::exception& e){
         MessageBox(NULL, e.what(), NULL, MB_OK);
