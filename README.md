@@ -1,5 +1,10 @@
 
 # PingPong
+
+### [Посмотреть как это выглядит на YouTube](https://youtu.be/COil22iG_zE)
+
+### [Скачать опубликованный релиз 1.0](https://github.com/Darkwood9612/PingPong/releases/tag/1.0)
+
 ### Требования: 
  1. Показать знание языка C++ (не С).
  
