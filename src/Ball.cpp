@@ -1,5 +1,4 @@
 #include "Ball.h"
-#include <vector>
 #include <math.h>
 
 namespace {

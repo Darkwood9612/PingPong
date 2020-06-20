@@ -1,8 +1,6 @@
 #pragma once
 #include <SDL2\SDL_mixer.h>
 
-#include <memory>
-#include <vector>
 #include <map>
 #include <string>
 

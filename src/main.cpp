@@ -9,7 +9,6 @@
 #include "View.h"
 
 #include <stdexcept>
-#include <algorithm>
 #include <filesystem>
 #include "AudioStorage.h"
 
