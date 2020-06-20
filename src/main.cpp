@@ -19,9 +19,11 @@ namespace {
     constexpr char* PLATFORM_BACKGROUND_PATH = "image\\platform.bmp";
     constexpr char* SIVIDING_STRIP_BACKGROUND_PATH = "image\\dividingStrip.bmp";
     constexpr char* BALL_BACKGROUND_PATH = "image\\ball.bmp";
-
-    constexpr char* SOUND_COLLISION_PATH = "sound\\collision.mid";
-
+    
+    constexpr char* SOUND_COLLISION_WAV_PATH = "sound\\collision.wav";
+    constexpr char* BACKGROUND_MUSIC_PATH = "sound\\background_music.wav";
+    constexpr char* SOUND_RESPAWN_PATH = "sound\\respawn.wav";
+    
     constexpr int AUDIO_BUFFERS = 4096;
 
     constexpr char* FONT_PATH = "font\\fast99.ttf";
@@ -34,6 +36,7 @@ int Quit(SDL_Window* window, SurfaceStorage& surfaceStorage, AudioStorage& audio
 
     surfaceStorage.FreeAllSurfaces();
     audioStorage.FreeAllMusic();
+    audioStorage.FreeAllSoundEffect();
     
     window ? SDL_DestroyWindow(window) : throw std::runtime_error("window == nullptr");
     
@@ -85,9 +88,12 @@ int main(int argc, char** args) {
         gameModel.dividingStrip = surfaceStorage.LoadBMP("dividingStrip", getAbsoluatePath(SIVIDING_STRIP_BACKGROUND_PATH));
         gameModel.CreateBall(surfaceStorage.LoadBMP("ball", getAbsoluatePath(BALL_BACKGROUND_PATH)), gameModel.GetScreenCenter());
         
-        gameModel.audioStorage = AudioStorage(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, AUDIO_BUFFERS);
-        gameModel.audioStorage.LoadMID(gameModel.audioStorage.collisionMusicName, getAbsoluatePath(SOUND_COLLISION_PATH));
-
+        gameModel.audioStorage = AudioStorage(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, AUDIO_BUFFERS);
+        gameModel.audioStorage.LoadSoundEffect(gameModel.audioStorage.collisionMusicName, getAbsoluatePath(SOUND_COLLISION_WAV_PATH));
+        gameModel.audioStorage.LoadSoundEffect(gameModel.audioStorage.respawnMusicName, getAbsoluatePath(SOUND_RESPAWN_PATH));
+        gameModel.audioStorage.LoadMusic(gameModel.audioStorage.backgroundMusicName, getAbsoluatePath(BACKGROUND_MUSIC_PATH));
+        gameModel.audioStorage.PlayMusic(gameModel.audioStorage.backgroundMusicName, -1);
+        
         while (true) {
             controller.UpdateModel(gameModel);
             view.Draw(gameModel, window, surfaceStorage);

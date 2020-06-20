@@ -18,7 +18,7 @@ public:
 	float GetAngleOfFlight() { return angleOfFlight; };
 
 	void Respawn(SDL_Rect spawnPoint, bool isPlayerLose);
-	void Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback);
+	void Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> collisionCallback, std::function<void(bool)> scoreCallback);
 private:
 	int STEP = 5;
 	float angleOfFlight = 20.f;

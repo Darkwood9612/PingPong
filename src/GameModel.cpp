@@ -66,11 +66,12 @@ void GameModel::MoveBall()
 {
     ball.Move(SCREEN_WIDTH, SCREEN_HEIGHT, GetPlayerRect(), GetBotRect(),
         [&]() {
-            audioStorage.PlayMusic(audioStorage.collisionMusicName, 1);
+            audioStorage.PlaySoundEffect(audioStorage.collisionMusicName, 0);
         },
         [&](bool isPlayerWin){
         isPlayerWin ? this->AddPointToPlayer() : this->AddPointToBot();
         ball.Respawn(screenCenter, isPlayerWin);
+        audioStorage.PlaySoundEffect(audioStorage.respawnMusicName, 0);
     });
 }
 

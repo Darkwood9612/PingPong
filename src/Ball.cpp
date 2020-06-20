@@ -41,7 +41,7 @@ void Ball::Respawn(SDL_Rect spawnPoint, bool isPlayerLose)
     angleOfFlight = isPlayerLose ? 135.f + randNum : 405.f -( randNum > 45.f ? randNum : randNum +360.f);
 }
 
-void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> soundCallback, std::function<void(bool)> scoreCallback)
+void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect playerRect, SDL_Rect botRect, std::function<void(void)> collisionCallback, std::function<void(bool)> scoreCallback)
 {
     auto nextPoint = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
     
@@ -50,7 +50,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         nextPoint.y >= playerRect.y &&
         nextPoint.y <= playerRect.y + playerRect.h) {
 
-        soundCallback();
+        collisionCallback();
 
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
@@ -64,7 +64,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         nextPoint.y >= botRect.y &&
         nextPoint.y <= botRect.y + botRect.h) {
         
-        soundCallback();
+        collisionCallback();
         
         angleOfFlight = 180 - angleOfFlight;
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
@@ -79,7 +79,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         angleOfFlight = angleOfFlight < 0 ? angleOfFlight += 360 : angleOfFlight;
 
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
-        soundCallback();
+        collisionCallback();
         scoreCallback(nextPoint.x <= 0 ? false : true);
         return;
     }
@@ -90,7 +90,7 @@ void Ball::Move(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, SDL_Rect player
         angleOfFlight = 360 - angleOfFlight;
 
         rect = GetPositionPointOnCircle(STEP, rect, angleOfFlight);
-        soundCallback();
+        collisionCallback();
         return;
     }
 
