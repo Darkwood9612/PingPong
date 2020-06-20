@@ -6,14 +6,11 @@
 class Controller
 {
 public:
-	Controller() { event = SDL_Event(); };
-
-	void UpdateModel(GameModel& model);
-	
+  void UpdateModel(GameModel& model);
 
 private:
-	const int BALL_UPDATE_PAUSE = 300;
-	void KeyDown(SDL_Keysym& s, GameModel& model);
-	SDL_Event event;
-	clock_t lastApply = 0;
+  const int BALL_UPDATE_PAUSE = 300;
+  void KeyDown(SDL_Keysym& s, GameModel& model);
+  SDL_Event event;
+  clock_t lastApply = 0;
 };

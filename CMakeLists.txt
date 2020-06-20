@@ -16,7 +16,7 @@ pmm(VCPKG
   REQUIRES ${ports}
 )
 
-file(GLOB src "${CMAKE_CURRENT_SOURCE_DIR}/src/*")
+file(GLOB src "${CMAKE_CURRENT_SOURCE_DIR}/src/*" "${CMAKE_CURRENT_SOURCE_DIR}/.clang-format")
 add_executable(test_task ${src})
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT test_task)
 

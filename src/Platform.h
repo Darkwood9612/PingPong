@@ -5,11 +5,13 @@
 class Platform
 {
 public:
-	Platform(SDL_Rect _rect, SDL_Surface* _background): rect(_rect), background(_background){};
-	Platform();
+  Platform(){};
+  Platform(SDL_Rect _rect, SDL_Surface* _background)
+    : rect(_rect)
+    , background(_background){};
 
-	SDL_Surface* background;
-	SDL_Rect rect;
+  SDL_Surface* background = nullptr;
+  SDL_Rect rect = { 0, 0, 0, 0 };
 
-	int speed = 12;
+  int speed = 12;
 };
