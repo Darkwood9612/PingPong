@@ -1,23 +1,15 @@
 #include "GameModel.h"
 
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
 namespace {
 
-std::string IntToString(int n)
-{
-  std::stringstream sstream;
-  sstream << n;
-  return sstream.str();
-}
-
 SDL_Surface* ScoreToSurface(int number, const std::string& name,
                             SurfaceStorage& surfaceStorage)
 {
 
-  std::string score = IntToString(number);
+  std::string score = std::to_string(number);
   auto scoreImage = TTF_RenderText_Solid(
     surfaceStorage.GetFont(), score.c_str(), surfaceStorage.GetWhite());
 
